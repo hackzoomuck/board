@@ -17,7 +17,8 @@ public class RestBoardController {
 
   @GetMapping("/find")
   public List<Post> find() {
-    return searchService.find();
+    System.out.println("내놔"+searchService.find("ti"));
+    return searchService.find("ti");
   }
 
 }
