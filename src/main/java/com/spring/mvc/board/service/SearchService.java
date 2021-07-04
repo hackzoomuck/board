@@ -12,7 +12,7 @@ public class SearchService {
 
   private final PostMapper postMapper;
 
-  public List<Post> find() {
-    return postMapper.findByTitle("");
+  public List<Post> find(String title) {
+    return postMapper.findByTitle(title);
   }
 }

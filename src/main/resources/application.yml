@@ -1,6 +1,6 @@
 mybatis:
   type-aliases-package: com.spring.mvc.board.dto
-  mapper-locations: mapper/**/*.xml
+  mapper-locations: mybatis/mapper/**/*.xml
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
