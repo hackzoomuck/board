@@ -1,6 +1,8 @@
 mybatis:
   type-aliases-package: com.spring.mvc.board.dto
   mapper-locations: mybatis/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,6 +12,5 @@ spring:
   devtools:
     livereload:
       enabled: true
-
   thymeleaf:
     cache: false

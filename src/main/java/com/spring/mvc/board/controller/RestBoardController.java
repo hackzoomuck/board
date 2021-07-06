@@ -1,6 +1,7 @@
 package com.spring.mvc.board.controller;
 
 import com.spring.mvc.board.dto.Post;
+import com.spring.mvc.board.dto.Search;
 import com.spring.mvc.board.service.SearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,13 @@ public class RestBoardController {
 
   private final SearchService searchService;
 
-  @GetMapping("/find")
-  public List<Post> find() {
-    System.out.println("내놔"+searchService.find("ti"));
-    return searchService.find("ti");
+  @GetMapping("/search")
+  public List<Post> search(Search search) {
+    return searchService.find(search);
   }
 
+  @GetMapping("/detail")
+  public Post detail(int postId){
+     return searchService.detailPost(postId);
+  }
 }
