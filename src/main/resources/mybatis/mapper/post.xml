@@ -4,34 +4,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.spring.mvc.board.mapper.PostMapper">
-  <select id="findAll" resultType="Post">
-    SELECT post_id, title, content
-    FROM post
-    WHERE delete_whether = FALSE
-  </select>
-  <select id="findByAll" parameterType="String" resultType="Post">
-    SELECT post_id, title, content
-    FROM post
-    WHERE delete_whether = FALSE AND (title LIKE CONCAT('%',#{postAll},'%') OR content LIKE CONCAT('%',#{postAll},'%'))
-  </select>
-  <select id="findByTitle" parameterType="String" resultType="Post">
-    SELECT post_id, title, content
-    FROM post
-    WHERE delete_whether = FALSE AND title LIKE CONCAT('%',#{title},'%')
-  </select>
-  <select id="findByContent" parameterType="String" resultType="Post">
-    SELECT post_id, title, content
-    FROM post
-    WHERE delete_whether = FALSE AND content LIKE CONCAT('%',#{content},'%')
-  </select>
   <select id="findByPostId" parameterType="int" resultType="Post">
     SELECT post_id, title, content
     FROM post
     WHERE post_id = #{postId}
   </select>
-  <select id="search" parameterType="Search" resultType="Post">
+
+  <select id="findPost" parameterType="Search" resultType="Post">
     SELECT post_id, title, content FROM post WHERE delete_whether = FALSE
-    <if test="search.postItem == 'postAll'">
+    <if test="'postAll'.equals(search.postItem)">
+      AND title LIKE CONCAT('%',#{search.postItemValue},'%')
+      OR content LIKE CONCAT('%',#{search.postItemValue},'%')
+    </if>
+    <if test="'title'.equals(search.postItem)">
+      AND title LIKE CONCAT('%',#{search.postItemValue},'%')
+    </if>
+    <if test="'content'.equals(search.postItem)">
+      AND content LIKE CONCAT('%',#{search.postItemValue},'%')
     </if>
   </select>
 </mapper>

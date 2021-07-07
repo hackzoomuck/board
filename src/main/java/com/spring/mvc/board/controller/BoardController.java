@@ -1,26 +1,28 @@
 package com.spring.mvc.board.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import com.spring.mvc.board.dto.Post;
+import com.spring.mvc.board.dto.Search;
+import com.spring.mvc.board.service.SearchService;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/board")
 public class BoardController {
 
-  @GetMapping("/board")
-  public String board() {
-    return "board";
+  private final SearchService searchService;
+
+  @GetMapping("/search")
+  public List<Post> search(Search search) {
+    return searchService.find(search);
   }
 
-  @GetMapping("/register")
-  public String register() {
-    return "register";
-  }
-
-  @GetMapping("/detail/{postId}")
-  public String detail(@PathVariable int postId, Model model) {
-    model.addAttribute("postId", postId);
-    return "/detail/detail";
+  @GetMapping("/detail")
+  public Post detail(int postId) {
+    return searchService.detailPost(postId);
   }
 }

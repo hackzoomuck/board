@@ -14,22 +14,10 @@ public class SearchService {
   private final PostMapper postMapper;
 
   public List<Post> find(Search search) {
-    if("".equals(search.getPostItemValue())){
-      return postMapper.findAll();
-    }
-    else if("postAll".equals(search.getPostItem())){
-      return postMapper.findByAll(search.getPostItemValue());
-    }
-    else if("title".equals(search.getPostItem())){
-      return postMapper.findByTitle(search.getPostItemValue());
-    }
-    else if("content".equals(search.getPostItem())){
-      return postMapper.findByContent(search.getPostItemValue());
-    }
-    return postMapper.findAll();
+    return postMapper.findPost(search);
   }
 
-  public Post detailPost(int postId){
+  public Post detailPost(int postId) {
     return postMapper.findByPostId(postId);
   }
 }
