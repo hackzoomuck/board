@@ -6,11 +6,15 @@ var DETAIL = DETAIL || {};
       $("#app > *").remove();
       $(document).ready(function () {
         let template = `<h2 style="text-align: center; margin-top: 30px">상세 페이지</h2>
-                        <div style="margin-left: 40%; margin-top: 30px">
-                          <input type="hidden" id="detailPostId">
-                          <p class="fw-normal" id="detailTitle">제목 : </p>
-                          <p class="fw-normal" id="detailContent">내용 : </p>
-                        </div>
+                        <div class="input-group mb-3" style="margin-top: 30px">
+                              <input type="hidden" id="detailPostId">
+                              <span class="input-group-text">제목</span>
+                              <input type="text" class="form-control" aria-label="title" aria-describedby="basic-addon1" id="detailTitle" disabled>
+                            </div>
+                            <div class="input-group mb-3">
+                              <span class="input-group-text">내용</span>
+                              <textarea class="form-control" aria-label="content" id="detailContent" disabled></textarea>
+                            </div>
                         <div style="text-align: center; margin-top: 30px">
                           <button type="button" class="btn btn-secondary" id="listButton">목록</button>
                           <button type="button" class="btn btn-secondary" id="modifyButton">수정</button>

@@ -12,4 +12,6 @@ public interface PostMapper {
   List<Post> findPost(@Param("search") Search search);
 
   Post findByPostId(@Param("postId") int postId);
+
+  void insertPost(@Param("post") Post post);
 }

@@ -23,4 +23,9 @@
       AND content LIKE CONCAT('%',#{search.postItemValue},'%')
     </if>
   </select>
+
+  <select id="insertPost" parameterType="Post">
+    INSERT INTO post (title, content)
+    VALUES (#{post.title}, #{post.content})
+  </select>
 </mapper>
