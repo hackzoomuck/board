@@ -4,8 +4,8 @@ var LIST = LIST || {};
   LIST = {
     init: function () {
       const self = this;
+      const $app = $("#app");
       const template = `<h2 style="text-align: center; margin-top: 30px">게시판</h2>
-                      <form>
                         <div class="input-group mb-3"
                              style="width: 600px; margin-left: auto; margin-right: auto;margin-top: 30px">
                           <select class="form-select form-select-sm " aria-label=".form-select-sm" name="postItem"
@@ -19,7 +19,6 @@ var LIST = LIST || {};
                           <button class="btn btn-outline-secondary" type="button" id="searchButton">검색</button>
                           <button class="btn btn-outline-secondary" type="button" id="searchAllButton">전체검색</button>
                         </div>
-                      </form>
                       <div class="container" style="margin-top: 30px; margin-left: auto; margin-right: auto;">
                         <div class="row">
                           <div class="col">
@@ -36,17 +35,19 @@ var LIST = LIST || {};
                       <button type="button" class="btn btn-secondary"
                               style="margin-top: 20px; margin-left: 20px; margin-bottom: 5%" id="registerButton">등록
                       </button>`;
-      $("#app").empty();
-      $("#app").append(template);
+      $app.empty();
+      $app.append(template);
       $("#postItem").val(self.params.postItem);
       $("#postItemValue").val(self.params.postItemValue);
-      LIST.event();
-      LIST.ajax();
+      self.event();
+      self.getPosts();
     },
-    ajax: function () {
+    getPosts: function () {
       const self = this;
-
-      $.get('/api/board/search', $('form').serialize())
+      $.get('/api/board/search', {
+        "postItem": $("#postItem").val(),
+        "postItemValue": $("#postItemValue").val()
+      })
       .done(
           function (data) {
             let len = data.length;
@@ -67,11 +68,11 @@ var LIST = LIST || {};
                   + "  </div>";
               $("div.container").append(div_str);
             }
-            LIST.detail();
+            self.detail();
           });
     },
     detail: function () {
-      $("div.container > div.row:gt(1)").off().click(function () {
+      $("div.container > div.row:gt(0)").off().click(function () {
         DETAIL.init($(this).find("div.col:first-child").text());
       })
     },
@@ -81,17 +82,17 @@ var LIST = LIST || {};
         $("div.container > div.row:gt(0)").remove();
         self.params.postItemValue = $("#postItemValue").val();
         self.params.postItem = $("#postItem").val();
-        LIST.ajax();
-      })
+        self.getPosts();
+      });
       $("#searchAllButton").on("click", function () {
         $("div.container > div.row:gt(0)").remove();
         $("#postItem").val("postAll");
         $("#postItemValue").val("");
-        LIST.ajax();
-      })
+        self.getPosts();
+      });
       $("#registerButton").on("click", function () {
         REGISTER.init();
-      })
+      });
     },
     params: {
       postItem: 'postAll',

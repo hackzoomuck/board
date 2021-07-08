@@ -4,9 +4,9 @@ var DETAIL = DETAIL || {};
   DETAIL = {
     init: function (postId) {
       const self = this;
-      $("#app > *").remove();
+      const $app = $("#app");
       $(document).ready(function () {
-        let template = `<div class="container">
+        const template = `<div class="container">
                           <h2 style="text-align: center; margin-top: 30px">상세 페이지</h2>
                           <div class="input-group mb-3" style="margin-top: 30px">
                             <span class="input-group-text">제목</span>
@@ -22,21 +22,19 @@ var DETAIL = DETAIL || {};
                             <button type="button" class="btn btn-secondary" id="deleteButton">삭제</button>
                           </div>
                         </div>`
-        $("#app").append(template);
-        $.ajax({
-          url: '/api/board/detail',
-          type: 'get',
-          dataType: 'json',
-          data: {'postId': postId},
-          success: function (data) {
-            $("#detailTitle").val(data.title);
-            $("#detailContent").append(data.content);
-          }
-        })
+        $app.empty();
+        $app.append(template);
+        self.getPost(postId);
         self.event(postId)
       })
     },
-
+    getPost: function (postId) {
+      $.get("/api/board/detail", {'postId': postId})
+      .done(function (data) {
+        $("#detailTitle").val(data.title);
+        $("#detailContent").append(data.content);
+      })
+    },
     event: function (postId) {
       $("#listButton").on("click", function () {
         LIST.init();
@@ -45,7 +43,6 @@ var DETAIL = DETAIL || {};
         MODIFY.init(postId);
       });
       $("#deleteButton").on("click", function () {
-        alert("삭제버튼 클릭");
         if (window.confirm("삭제하시겠습니까?")) {
           $.post("/api/board/modify", {postId: postId})
           .done(function () {
@@ -53,9 +50,8 @@ var DETAIL = DETAIL || {};
             LIST.init();
           })
         }
-      })
+      });
     }
-
   }
 })()
 
