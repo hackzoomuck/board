@@ -34,7 +34,9 @@ var LIST = LIST || {};
                       </div>
                       <button type="button" class="btn btn-secondary"
                               style="margin-top: 20px; margin-left: 20px; margin-bottom: 5%" id="registerButton">등록
-                      </button>`;
+                      </button>
+                      <nav aria-label="pagination" id="pageNav"></nav>
+                      `;
       $app.empty();
       $app.append(template);
       $("#postItem").val(self.params.postItem);
@@ -44,19 +46,21 @@ var LIST = LIST || {};
     },
     getPosts: function () {
       const self = this;
-      $.get('/api/board/search', {
+      $.get('/api/board', {
         "postItem": $("#postItem").val(),
         "postItemValue": $("#postItemValue").val()
       })
       .done(
           function (data) {
-            let len = data.length;
+            const len = data.length;
+            PAGING.params.totalCount = len;
             if (len === 0) {
               let div_str = `<div class=\"row\">
                          <p> <br> 검색된 내용이 없습니다.</p>
                          </div>`;
               $("div.container").append(div_str);
             }
+
             for (let i = len - 1; i >= 0; i--) {
               const postId = data[i].postId;
               const title = data[i].title;
@@ -96,7 +100,8 @@ var LIST = LIST || {};
     },
     params: {
       postItem: 'postAll',
-      postItemValue: ''
+      postItemValue: '',
+      listSize: 5
     }
   }
 })()

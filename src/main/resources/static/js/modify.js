@@ -33,20 +33,25 @@ var MODIFY = MODIFY || {};
 
     getPrePost: function (postId) {
       const self = this;
-      $.get("/api/board/detail", {'postId': postId})
+      $.get(`/api/board/${postId}`)
       .done(function (data) {
+        let inputContent = data.content.replaceAll('&#60;', '<')
+        .replaceAll('&#62;', '>');
         $("#inputTitle").val(data.title);
-        $("#inputContent").val(data.content);
-        self.param.preInputTitle = data.title;
-        self.param.preInputContent = data.content;
+        $("#inputContent").val(inputContent);
+        self.variable.preInputTitle = data.title;
+        self.variable.preInputContent = inputContent;
       })
     },
 
     updatePost: function (postId) {
-      $.post("/api/board/modify", {
+      let inputContentVal = $("#inputContent").val();
+      inputContentVal = inputContentVal.replaceAll('<', '&#60;'); //replace 호출 함수
+      inputContentVal = inputContentVal.replaceAll('>', '&#62;');
+      $.put("/api/board", {
         postId: postId,
         title: $("#inputTitle").val(),
-        content: $("#inputContent").val()
+        content: inputContentVal
       })
       .done(function () {
         alert("수정되었습니다.");
@@ -57,7 +62,6 @@ var MODIFY = MODIFY || {};
     event: function (postId) {
       const self = this;
       $("#modifyButton").on("click", function (event) {
-        alert("click modify button");
         const $inputTitle = $("#inputTitle");
         const $inputContent = $("#inputContent");
         const $errorTitle = $("#errorTitle");
@@ -80,8 +84,8 @@ var MODIFY = MODIFY || {};
       });
 
       $("#cancelButton").on("click", function () {
-        if (self.param.preInputTitle !== $("#inputTitle").val()
-            || self.param.preInputContent !== $("#inputContent").val()) {
+        if (self.variable.preInputTitle !== $("#inputTitle").val()
+            || self.variable.preInputContent !== $("#inputContent").val()) {
           if (window.confirm("변경된 내용을 저장하지 않고 나가시겠습니까?")) {
             DETAIL.init(postId);
           }
@@ -91,9 +95,9 @@ var MODIFY = MODIFY || {};
       });
     },
 
-    param: {
-      preInputTitle: $("#inputTitle").val(),
-      preInputContent: $("#inputContent").val()
+    variable: {
+      preInputTitle: '',
+      preInputContent: ''
     }
   }
 })()

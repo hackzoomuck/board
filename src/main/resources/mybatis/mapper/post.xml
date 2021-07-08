@@ -31,14 +31,14 @@
 
   <update id="updatePost" parameterType="Post">
     UPDATE post
-    SET
-    <if test="post.title == null">
-      delete_whether = TRUE
-    </if>
-    <if test="post.title != null">
-      title = #{post.title},
-      content = #{post.content}
-    </if>
+    SET title   = #{post.title},
+        content = #{post.content}
+    WHERE post_id = #{post.postId}
+  </update>
+
+  <update id="deletePost" parameterType="Post">
+    UPDATE post
+    SET delete_whether = TRUE
     WHERE post_id = #{post.postId}
   </update>
 </mapper>

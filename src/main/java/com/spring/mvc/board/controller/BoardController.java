@@ -6,10 +6,7 @@ import com.spring.mvc.board.service.PostService;
 import com.spring.mvc.board.service.SearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,23 +16,28 @@ public class BoardController {
   private final SearchService searchService;
   private final PostService postService;
 
-  @GetMapping("/search")
+  @GetMapping
   public List<Post> search(Search search) {
     return searchService.find(search);
   }
 
-  @GetMapping("/detail")
-  public Post detail(int postId) {
+  @GetMapping("/{postId}")
+  public Post detail(@PathVariable int postId) {
     return searchService.detailPost(postId);
   }
 
-  @PostMapping("/register")
+  @PostMapping
   public void register(Post post) {
     postService.register(post);
   }
 
-  @PostMapping("/modify")
+  @PutMapping
   public void modify(Post post) {
     postService.modify(post);
+  }
+
+  @DeleteMapping
+  public void delete(Post post) {
+    postService.delete(post);
   }
 }

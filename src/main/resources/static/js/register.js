@@ -30,6 +30,7 @@ var REGISTER = REGISTER || {};
         self.event();
       })
     },
+
     event: function () {
       const self = this;
       $("#registerButton").on("click", function (event) {
@@ -88,7 +89,7 @@ var REGISTER = REGISTER || {};
       });
     },
     insertPost: function () {
-      $.post("/api/board/register",
+      $.post("/api/board",
           {title: $("#inputTitle").val(), content: $("#inputContent").val()})
       .done(function () {
         alert("등록되었습니다.");

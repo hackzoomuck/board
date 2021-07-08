@@ -16,4 +16,6 @@ public interface PostMapper {
   void insertPost(@Param("post") Post post);
 
   void updatePost(@Param("post") Post post);
+
+  void deletePost(@Param("post") Post post);
 }

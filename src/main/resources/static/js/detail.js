@@ -29,7 +29,7 @@ var DETAIL = DETAIL || {};
       })
     },
     getPost: function (postId) {
-      $.get("/api/board/detail", {'postId': postId})
+      $.get(`/api/board/${postId}`)
       .done(function (data) {
         $("#detailTitle").val(data.title);
         $("#detailContent").append(data.content);
@@ -43,16 +43,22 @@ var DETAIL = DETAIL || {};
         MODIFY.init(postId);
       });
       $("#deleteButton").on("click", function () {
-        if (window.confirm("삭제하시겠습니까?")) {
-          $.post("/api/board/modify", {postId: postId})
-          .done(function () {
-            alert("삭제되었습니다.")
-            LIST.init();
-          })
-        }
-      });
+            if (window.confirm("삭제하시겠습니까?")) {
+              $.ajax({
+                url: "/api/board",
+                type: "DELETE",
+                data: {postId: postId}
+              })
+              .done(function () {
+                alert("삭제되었습니다.")
+                LIST.init();
+              })
+            }
+          }
+      );
     }
   }
-})()
+})
+()
 
 
