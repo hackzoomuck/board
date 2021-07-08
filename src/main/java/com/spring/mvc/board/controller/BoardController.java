@@ -2,7 +2,7 @@ package com.spring.mvc.board.controller;
 
 import com.spring.mvc.board.dto.Post;
 import com.spring.mvc.board.dto.Search;
-import com.spring.mvc.board.service.RegisterService;
+import com.spring.mvc.board.service.PostService;
 import com.spring.mvc.board.service.SearchService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
   private final SearchService searchService;
-  private final RegisterService registerService;
+  private final PostService postService;
 
   @GetMapping("/search")
   public List<Post> search(Search search) {
@@ -31,6 +31,11 @@ public class BoardController {
 
   @PostMapping("/register")
   public void register(Post post) {
-    registerService.register(post);
+    postService.register(post);
+  }
+
+  @PostMapping("/modify")
+  public void modify(Post post) {
+    postService.modify(post);
   }
 }

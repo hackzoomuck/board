@@ -13,8 +13,8 @@
   <select id="findPost" parameterType="Search" resultType="Post">
     SELECT post_id, title, content FROM post WHERE delete_whether = FALSE
     <if test="'postAll'.equals(search.postItem)">
-      AND title LIKE CONCAT('%',#{search.postItemValue},'%')
-      OR content LIKE CONCAT('%',#{search.postItemValue},'%')
+      AND (title LIKE CONCAT('%',#{search.postItemValue},'%')
+      OR content LIKE CONCAT('%',#{search.postItemValue},'%'))
     </if>
     <if test="'title'.equals(search.postItem)">
       AND title LIKE CONCAT('%',#{search.postItemValue},'%')
@@ -28,4 +28,17 @@
     INSERT INTO post (title, content)
     VALUES (#{post.title}, #{post.content})
   </select>
+
+  <update id="updatePost" parameterType="Post">
+    UPDATE post
+    SET
+    <if test="post.title == null">
+      delete_whether = TRUE
+    </if>
+    <if test="post.title != null">
+      title = #{post.title},
+      content = #{post.content}
+    </if>
+    WHERE post_id = #{post.postId}
+  </update>
 </mapper>

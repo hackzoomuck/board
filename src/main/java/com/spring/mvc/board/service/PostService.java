@@ -7,11 +7,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RegisterService {
+public class PostService {
 
   private final PostMapper postMapper;
 
   public void register(Post post) {
     postMapper.insertPost(post);
   }
+
+  public void modify(Post post) {
+    postMapper.updatePost(post);
+  }
+
 }

@@ -14,4 +14,6 @@ public interface PostMapper {
   Post findByPostId(@Param("postId") int postId);
 
   void insertPost(@Param("post") Post post);
+
+  void updatePost(@Param("post") Post post);
 }

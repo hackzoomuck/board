@@ -8,7 +8,6 @@ var MODIFY = MODIFY || {};
       $(document).ready(function () {
         let template = `<div class="container">
                           <h2 style="text-align: center; margin-top: 30px">게시물 수정</h2>
-                          <form>
                             <div class="input-group mb-3" style="margin-top: 30px">
                               <span class="input-group-text">제목</span>
                               <input type="text" class="form-control" aria-label="title" placeholder="제목을 입력하세요." aria-describedby="basic-addon1" id="inputTitle">
@@ -23,11 +22,10 @@ var MODIFY = MODIFY || {};
                             <button type="button" class="btn btn-secondary" id="modifyButton">수정</button>
                             <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
                             </div>
-                          </form>
                         </div>`
         $("#app").append(template);
         MODIFY.preDataAjax(postId);
-        MODIFY.cancel(postId);
+        MODIFY.event(postId);
       })
     },
     preDataAjax: function (postId) {
@@ -42,16 +40,24 @@ var MODIFY = MODIFY || {};
         }
       })
     },
-    modify: function (postId) {
-      $("#modifyButton").on("click")
-    },
-    validate: function (postId) {
-
-    },
-    cancel: function (postId) {
+    event: function (postId) {
+      $("#modifyButton").on("click", function () {
+        alert("수정버튼 클릭");
+        $.post("/api/board/modify", {
+          postId: postId,
+          title: $("#inputTitle").val(),
+          content: $("#inputContent").val()
+        })
+        .done(function () {
+          alert("수정되었습니다.");
+          DETAIL.init(postId);
+        })
+      });
       $("#cancelButton").on("click", function () {
         DETAIL.init(postId);
-      })
-    }
+      });
+    },
+    validate: function (postId) {
+    },
   }
 })()
