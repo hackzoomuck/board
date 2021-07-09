@@ -48,10 +48,14 @@ var MODIFY = MODIFY || {};
       let inputContentVal = $("#inputContent").val();
       inputContentVal = inputContentVal.replaceAll('<', '&#60;'); //replace 호출 함수
       inputContentVal = inputContentVal.replaceAll('>', '&#62;');
-      $.put("/api/board", {
-        postId: postId,
-        title: $("#inputTitle").val(),
-        content: inputContentVal
+      $.ajax({
+        url: "/api/board",
+        type: "PUT",
+        data: {
+          postId: postId,
+          title: $("#inputTitle").val(),
+          content: inputContentVal
+        }
       })
       .done(function () {
         alert("수정되었습니다.");

@@ -95,6 +95,7 @@ var REGISTER = REGISTER || {};
         alert("등록되었습니다.");
         LIST.params.postItem = 'postAll';
         LIST.params.postItemValue = '';
+        PAGING.options.pageNumber = 1;
         LIST.init();
       })
     }

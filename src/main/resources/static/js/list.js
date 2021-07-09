@@ -35,14 +35,15 @@ var LIST = LIST || {};
                       <button type="button" class="btn btn-secondary"
                               style="margin-top: 20px; margin-left: 20px; margin-bottom: 5%" id="registerButton">등록
                       </button>
-                      <nav aria-label="pagination" id="pageNav"></nav>
-                      `;
+                      <nav aria-label="pagination" id="pageNav">
+                      <ul class="pagination justify-content-center" id="pageUl"></ul>
+                      </nav>`;
       $app.empty();
       $app.append(template);
       $("#postItem").val(self.params.postItem);
       $("#postItemValue").val(self.params.postItemValue);
       self.event();
-      self.getPosts();
+      LIST.getPosts();
     },
     getPosts: function () {
       const self = this;
@@ -53,25 +54,30 @@ var LIST = LIST || {};
       .done(
           function (data) {
             const len = data.length;
-            PAGING.params.totalCount = len;
             if (len === 0) {
               let div_str = `<div class=\"row\">
                          <p> <br> 검색된 내용이 없습니다.</p>
                          </div>`;
               $("div.container").append(div_str);
             }
+            PAGING.options.totalCount = len;
+            PAGING.setStartEndPage();
+            const pageNumber = PAGING.options.pageNumber;
+            const listSize = PAGING.options.listSize;
+            const idx = len - (pageNumber - 1) * listSize;
 
-            for (let i = len - 1; i >= 0; i--) {
+            for (let i = idx - 1; i >= 0 && i >= idx - listSize; i--) {
               const postId = data[i].postId;
               const title = data[i].title;
               const content = data[i].content;
-              let div_str = "<div class=\"row\">\n"
+              const div_str = "<div class=\"row\">\n"
                   + "  <div class=\"col\">" + postId + "</div>\n"
                   + "  <div class=\"col\">" + title + "</div>\n"
                   + "  <div class=\"col\">" + content + "</div>\n"
                   + "  </div>";
               $("div.container").append(div_str);
             }
+            PAGING.init();
             self.detail();
           });
     },
@@ -86,12 +92,14 @@ var LIST = LIST || {};
         $("div.container > div.row:gt(0)").remove();
         self.params.postItemValue = $("#postItemValue").val();
         self.params.postItem = $("#postItem").val();
+        PAGING.options.pageNumber = 1;
         self.getPosts();
       });
       $("#searchAllButton").on("click", function () {
         $("div.container > div.row:gt(0)").remove();
         $("#postItem").val("postAll");
         $("#postItemValue").val("");
+        PAGING.options.pageNumber = 1;
         self.getPosts();
       });
       $("#registerButton").on("click", function () {
@@ -101,8 +109,7 @@ var LIST = LIST || {};
     params: {
       postItem: 'postAll',
       postItemValue: '',
-      listSize: 5
-    }
+    },
   }
 })()
 

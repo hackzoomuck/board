@@ -2,16 +2,24 @@ div.container > div.row:first-child {
   text-align: center;
   font-weight: bold;
 }
+
 div.container > div.row > div:first-child {
   text-align: center;
 }
+
 div.container > div.row > p {
   text-align: center;
 }
+
 div.container > div.row {
   border: 0.5px solid darkgrey;
   cursor: pointer;
 }
+
 div.container > div.row:nth-child(n+2):hover {
   background-color: darkgrey;
+}
+
+#pageUl {
+  cursor: pointer;
 }
