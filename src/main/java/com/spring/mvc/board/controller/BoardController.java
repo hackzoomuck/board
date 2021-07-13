@@ -32,8 +32,9 @@ public class BoardController {
   }
 
   @PutMapping
-  public void modify(Post post) {
+  public String modify(Post post) {
     postService.modify(post);
+    return "success";
   }
 
   @DeleteMapping

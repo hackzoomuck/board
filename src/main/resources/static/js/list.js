@@ -1,11 +1,12 @@
-var LIST = LIST || {};
+import PAGING from "./paging.js";
+import DETAIL from "./detail.js";
+import REGISTER from "./register.js";
 
-(function () {
-  LIST = {
-    init: function () {
-      const self = this;
-      const $app = $("#app");
-      const template = `<h2 style="text-align: center; margin-top: 30px">게시판</h2>
+const LIST = {
+  init: function () {
+    const self = this;
+    const $app = $("#app");
+    const template = `<h2 style="text-align: center; margin-top: 30px">게시판</h2>
                         <div class="input-group mb-3"
                              style="width: 600px; margin-left: auto; margin-right: auto;margin-top: 30px">
                           <select class="form-select form-select-sm " aria-label=".form-select-sm" name="postItem"
@@ -38,81 +39,82 @@ var LIST = LIST || {};
                       <nav aria-label="pagination" id="pageNav">
                       <ul class="pagination justify-content-center" id="pageUl"></ul>
                       </nav>`;
-      $app.empty();
-      $app.append(template);
-      $("#postItem").val(self.params.postItem);
-      $("#postItemValue").val(self.params.postItemValue);
-      self.event();
-      LIST.getPosts();
-    },
-    getPosts: function () {
-      const self = this;
-      $.get('/api/board', {
-        "postItem": $("#postItem").val(),
-        "postItemValue": $("#postItemValue").val()
-      })
-      .done(
-          function (data) {
-            const len = data.length;
-            if (len === 0) {
-              let div_str = `<div class=\"row\">
+    $app.empty();
+    $app.append(template);
+    $("#postItem").val(self.params.postItem);
+    $("#postItemValue").val(self.params.postItemValue);
+    self.event();
+    LIST.getPosts();
+  },
+  getPosts: function () {
+    const self = this;
+    $.get('/api/board', {
+      "postItem": $("#postItem").val(),
+      "postItemValue": $("#postItemValue").val()
+    })
+    .done(
+        function (data) {
+          const len = data.length;
+          if (len === 0) {
+            let div_str = `<div class=\"row\">
                          <p> <br> 검색된 내용이 없습니다.</p>
                          </div>`;
-              $("div.container").append(div_str);
-            }
-            PAGING.options.totalCount = len;
-            PAGING.setStartEndPage();
-            const pageNumber = PAGING.options.pageNumber;
-            const listSize = PAGING.options.listSize;
-            const idx = len - (pageNumber - 1) * listSize;
+            $("div.container").append(div_str);
+          }
+          PAGING.options.totalCount = len;
+          PAGING.setStartEndPage();
+          const pageNumber = PAGING.options.pageNumber;
+          const listSize = PAGING.options.listSize;
+          const idx = len - (pageNumber - 1) * listSize;
 
-            for (let i = idx - 1; i >= 0 && i >= idx - listSize; i--) {
-              const postId = data[i].postId;
-              const title = data[i].title;
-              const content = data[i].content;
-              const div_str = "<div class=\"row\">\n"
-                  + "  <div class=\"col\">" + postId + "</div>\n"
-                  + "  <div class=\"col\">" + title + "</div>\n"
-                  + "  <div class=\"col\">" + content + "</div>\n"
-                  + "  </div>";
-              $("div.container").append(div_str);
-            }
-            PAGING.init();
-            self.detail();
-          });
-    },
-    detail: function () {
-      $("div.container > div.row:gt(0)").off().click(function () {
-        DETAIL.init($(this).find("div.col:first-child").text());
-      })
-    },
-    event: function () {
-      const self = this;
-      $("#searchButton").on("click", function () {
-        $("div.container > div.row:gt(0)").remove();
-        self.params.postItemValue = $("#postItemValue").val();
-        self.params.postItem = $("#postItem").val();
-        PAGING.options.pageNumber = 1;
-        self.getPosts();
-      });
-      $("#searchAllButton").on("click", function () {
-        $("div.container > div.row:gt(0)").remove();
-        $("#postItem").val("postAll");
-        $("#postItemValue").val("");
-        PAGING.options.pageNumber = 1;
-        self.getPosts();
-      });
-      $("#registerButton").on("click", function () {
-        REGISTER.init();
-      });
-    },
-    params: {
-      postItem: 'postAll',
-      postItemValue: '',
-    },
-  }
-})()
+          for (let i = idx - 1; i >= 0 && i >= idx - listSize; i--) {
+            const postId = data[i].postId;
+            const title = data[i].title;
+            const content = data[i].content;
+            const div_str = "<div class=\"row\">\n"
+                + "  <div class=\"col\">" + postId + "</div>\n"
+                + "  <div class=\"col\">" + title + "</div>\n"
+                + "  <div class=\"col\">" + content + "</div>\n"
+                + "  </div>";
+            $("div.container").append(div_str);
+          }
+          PAGING.init();
+          self.detail();
+        });
+  },
+  detail: function () {
+    $("div.container > div.row:gt(0)").off().click(function () {
+      DETAIL.init($(this).find("div.col:first-child").text());
+    })
+  },
+  event: function () {
+    const self = this;
+    $("#searchButton").on("click", function () {
+      $("div.container > div.row:gt(0)").remove();
+      self.params.postItem = $("#postItem").val();
+      self.params.postItemValue = $("#postItemValue").val();
+      PAGING.options.pageNumber = 1;
+      self.getPosts();
+    });
+    $("#searchAllButton").on("click", function () {
+      $("div.container > div.row:gt(0)").remove();
+      $("#postItem").val("postAll");
+      $("#postItemValue").val("");
+      PAGING.options.pageNumber = 1;
+      self.params.postItem = 'postAll';
+      self.params.postItemValue = '';
+      self.getPosts();
+    });
+    $("#registerButton").on("click", function () {
+      REGISTER.init();
+    });
+  },
+  params: {
+    postItem: 'postAll',
+    postItemValue: '',
+  },
+}
 
 LIST.init()
-
+export default LIST;
 
