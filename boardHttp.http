@@ -1,0 +1,12 @@
+### list 조회
+GET http://localhost:8080/api/board
+
+### update
+PUT http://localhost:8080/api/board
+Content-Type: application/json;charset=UTF-8
+
+{
+  "postId": 1,
+  "title": "api title4",
+  "content": "api test content"
+}
