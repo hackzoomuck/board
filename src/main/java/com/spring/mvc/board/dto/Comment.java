@@ -9,8 +9,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Search {
-
-  private String postItem;
-  private String postItemValue;
+public class Comment {
+  
+  private int id;
+  private int postId;
+  private String content;
+  private int parentId;
+  private String password;
+  private String nickname;
+  private boolean deleteWhether;
 }
+

@@ -10,7 +10,7 @@ const REGISTER = {
                           <h2 style="text-align: center; margin-top: 30px">게시물 등록</h2>
                             <div class="input-group mb-3" style="margin-top: 30px">
                               <span class="input-group-text">제목</span>
-                              <input type="text" class="form-control" aria-label="title" placeholder="제목을 입력하세요." aria-describedby="basic-addon1" id="inputTitle">
+                              <input type="text" class="form-control" aria-label="title" placeholder="제목을 입력하세요."  id="inputTitle">
                             </div>
                             <div id="errorTitle" style="color: red"></div>
                             <div class="input-group mb-3">
@@ -18,7 +18,16 @@ const REGISTER = {
                               <textarea class="form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent"></textarea>
                             </div>
                             <div id="errorContent" style="color: red"></div>
-                            <div style="text-align: center; margin-top: 30px">
+                            <div class="input-group mb-3">
+                              <span class="input-group-text">비밀번호</span>
+                              <input type="password" class="form-control" aria-label="password" placeholder="최소 8글자 이상 입력하세요." id="inputPassword"">
+                            </div>
+                            <div id="errorPassword" style="color: red"></div>
+                            <div class="input-group mb-3">
+                              <span class="input-group-text">비밀번호 확인</span>
+                              <input type="password" class="form-control" aria-label="passwordCheck" placeholder="비밀번호 재입력하세요." id="inputPasswordCheck" ">
+                            </div>
+                            <div id="errorPasswordCheck" style="color: red"></div>
                             <button type="button" class="btn btn-secondary" id="registerButton">등록</button>
                             <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
                             </div>
@@ -34,20 +43,41 @@ const REGISTER = {
   event: function () {
     const self = this;
     $("#registerButton").on("click", function (event) {
-      const $inputTitleValue = $("#inputTitle").val();
-      const $inputContentValue = $("#inputContent").val();
-      if ($inputTitleValue.length === 0) {
-        $("#errorTitle").text("제목을 입력해주세요.")
-        event.preventDefault();
-      }
-      if ($inputContentValue.length === 0) {
-        $("#errorContent").text("내용을 입력해주세요.")
-        event.preventDefault();
-      }
-      if ($inputTitleValue.length >= 1 && $inputContentValue.length >= 1) {
-        self.insertPost();
-      }
-    });
+          const $inputTitleValue = $("#inputTitle").val();
+          const $inputContentValue = $("#inputContent").val();
+          const $inputPasswordValue = $("#inputPassword").val();
+          const $inputPasswordCheckValue = $("#inputPasswordCheck").val();
+          if ($inputTitleValue.length === 0) {
+            $("#errorTitle").text("제목을 입력해주세요.");
+            event.preventDefault();
+          }
+          if ($inputContentValue.length === 0) {
+            $("#errorContent").text("내용을 입력해주세요.");
+            event.preventDefault();
+          }
+          if ($inputPasswordValue.length === 0) {
+            $("#errorPassword").text("비밀번호를 입력해주세요.");
+            event.preventDefault();
+          }
+          if ($inputPasswordValue.length > 0 && $inputPasswordValue.length < 8) {
+            $("#errorPassword").text("최소 8글자 이상 입력해주세요.");
+            event.preventDefault();
+          }
+          if ($inputPasswordValue !== $inputPasswordCheckValue) {
+            $("#errorPasswordCheck").text("비밀번호와 같지 않습니다.");
+            event.preventDefault();
+          }
+          if ($inputPasswordCheckValue.length === 0) {
+            $("#errorPasswordCheck").text("비밀번호 확인을 입력해주세요.");
+            event.preventDefault();
+          }
+          if ($inputTitleValue.length >= 1 && $inputContentValue.length >= 1
+              && $inputPasswordValue.length >= 8 && $inputPasswordValue
+              === $inputPasswordCheckValue) {
+            self.insertPost();
+          }
+        }
+    );
 
     $("#cancelButton").on("click", function () {
       if ($("#inputTitle").val().length > 0 || $("#inputContent").val().length
@@ -66,6 +96,10 @@ const REGISTER = {
     const $errorTitle = $("#errorTitle");
     const $inputContent = $("#inputContent");
     const $errorContent = $("#errorContent");
+    const $inputPassword = $("#inputPassword");
+    const $errorPassword = $("#errorPassword");
+    const $inputPasswordCheck = $("#inputPasswordCheck");
+    const $errorPasswordCheck = $("#errorPasswordCheck");
 
     $inputTitle.on("input", function () {
       $errorTitle.text("");
@@ -87,10 +121,27 @@ const REGISTER = {
         $inputContent.val(inputContentValue.substring(0, 100));
       }
     });
+
+    $inputPasswordCheck.on("input", function () {
+      $errorPasswordCheck.text("");
+      const inputPasswordValue = $("#inputPassword").val();
+      if (inputPasswordValue === '') {
+        $errorPasswordCheck.text("비밀번호를 입력해주세요.")
+        $inputPasswordCheck.val('');
+      }
+    })
+    $inputPassword.on("input", function () {
+      $errorPassword.text("");
+      $errorPasswordCheck.text("");
+    })
   },
   insertPost: function () {
     $.post("/api/board",
-        {title: $("#inputTitle").val(), content: $("#inputContent").val()})
+        {
+          title: $("#inputTitle").val(),
+          content: $("#inputContent").val(),
+          password: $("#inputPassword").val()
+        })
     .done(function () {
       alert("등록되었습니다.");
       LIST.params.postItem = 'postAll';

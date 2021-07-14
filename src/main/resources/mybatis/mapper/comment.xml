@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.mvc.board.mapper.CommentMapper">
+  <select id="insertComment" parameterType="Comment">
+    INSERT INTO comment (post_id, content, parent_id, password, nickname)
+    VALUES (#{comment.postId}, #{comment.content}, #{comment.parentId}, #{comment.password},
+            #{comment.nickname})
+  </select>
+
+  <select id="findComment" parameterType="int" resultType="Comment">
+    SELECT content, nickname, parent_id
+    FROM comment
+    WHERE post_id = #{postId}
+  </select>
+</mapper>

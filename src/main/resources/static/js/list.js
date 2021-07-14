@@ -6,6 +6,7 @@ const LIST = {
   init: function () {
     const self = this;
     const $app = $("#app");
+    $(".modal-backdrop").remove();
     const template = `<h2 style="text-align: center; margin-top: 30px">게시판</h2>
                         <div class="input-group mb-3"
                              style="width: 600px; margin-left: auto; margin-right: auto;margin-top: 30px">

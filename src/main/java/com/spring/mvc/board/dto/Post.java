@@ -10,8 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Post {
+
   private String title;
   private String content;
   private int postId;
   private boolean deleteWhether;
+  private String password;
 }
+

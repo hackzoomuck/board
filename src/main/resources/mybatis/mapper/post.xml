@@ -10,6 +10,12 @@
     WHERE post_id = #{postId}
   </select>
 
+  <select id="findPwdByPostId" parameterType="int" resultType="String">
+    SELECT password
+    FROM post
+    WHERE post_id = #{postId}
+  </select>
+
   <select id="findPost" parameterType="Search" resultType="Post">
     SELECT post_id, title, content FROM post WHERE delete_whether = FALSE
     <if test="'postAll'.equals(search.postItem)">
@@ -25,8 +31,8 @@
   </select>
 
   <select id="insertPost" parameterType="Post">
-    INSERT INTO post (title, content)
-    VALUES (#{post.title}, #{post.content})
+    INSERT INTO post (title, content, password)
+    VALUES (#{post.title}, #{post.content}, #{post.password})
   </select>
 
   <update id="updatePost" parameterType="Post">

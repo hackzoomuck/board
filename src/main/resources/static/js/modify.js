@@ -5,6 +5,7 @@ const MODIFY = {
   init: function (postId) {
     const self = this;
     const $app = $("#app");
+    $(".modal-backdrop").remove();
     $(document).ready(function () {
       const template = `<div class="container">
                           <h2 style="text-align: center; margin-top: 30px">게시물 수정</h2>
