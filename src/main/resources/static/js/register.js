@@ -10,12 +10,12 @@ const REGISTER = {
                           <h2 style="text-align: center; margin-top: 30px">게시물 등록</h2>
                             <div class="input-group mb-3" style="margin-top: 30px">
                               <span class="input-group-text">제목</span>
-                              <input type="text" class="form-control" aria-label="title" placeholder="제목을 입력하세요."  id="inputTitle">
+                              <input type="text" class="inputTitle form-control" aria-label="title" placeholder="제목을 입력하세요."  id="inputTitle">
                             </div>
                             <div id="errorTitle" style="color: red"></div>
                             <div class="input-group mb-3">
                               <span class="input-group-text">내용</span>
-                              <textarea class="form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent"></textarea>
+                              <textarea class="inputContent form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent"></textarea>
                             </div>
                             <div id="errorContent" style="color: red"></div>
                             <div class="input-group mb-3">
@@ -109,7 +109,13 @@ const REGISTER = {
       }
       if (inputTitleValue.length > 20) {
         $errorTitle.text("제목은 20글자 이하 입력 가능합니다.")
-        $inputTitle.val(inputTitleValue.substring(0, 20));
+        $inputTitle.val(inputTitleValue.substring(0, 21));
+        $("body").on("click", function (event) {
+          if (!$(event.target).hasClass("input.inputTitle")) {
+            $errorTitle.text("")
+            $inputTitle.val(inputTitleValue.substring(0, 20));
+          }
+        });
       }
     });
 
@@ -118,7 +124,13 @@ const REGISTER = {
       const inputContentValue = $inputContent.val();
       if (inputContentValue.length > 100) {
         $errorContent.text("내용은 100글자 이하 입력 가능합니다.")
-        $inputContent.val(inputContentValue.substring(0, 100));
+        $inputContent.val(inputContentValue.substring(0, 101));
+        $("body").on("click", function (event) {
+          if (!$(event.target).hasClass("textarea.inputContent")) {
+            $errorContent.text("")
+            $inputContent.val(inputContentValue.substring(0, 100));
+          }
+        });
       }
     });
 

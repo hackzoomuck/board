@@ -26,11 +26,8 @@ const LIST = {
                           <div class="col">
                             번호
                           </div>
-                          <div class="col">
+                          <div class="col-8">
                             제목
-                          </div>
-                          <div class="col">
-                            내용
                           </div>
                         </div>
                       </div>
@@ -71,12 +68,10 @@ const LIST = {
           for (let i = idx - 1; i >= 0 && i >= idx - listSize; i--) {
             const postId = data[i].postId;
             const title = data[i].title;
-            const content = data[i].content;
-            const div_str = "<div class=\"row\">\n"
-                + "  <div class=\"col\">" + postId + "</div>\n"
-                + "  <div class=\"col\">" + title + "</div>\n"
-                + "  <div class=\"col\">" + content + "</div>\n"
-                + "  </div>";
+            const div_str = `<div class="row">
+                              <div class="col">${postId}</div>
+                              <div class="col-8">${title}</div>
+                             </div>`;
             $("div.container").append(div_str);
           }
           PAGING.init();

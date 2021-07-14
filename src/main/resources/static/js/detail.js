@@ -15,7 +15,7 @@ const DETAIL = {
                           </div>
                           <div class="input-group mb-3">
                             <span class="input-group-text">내용</span>
-                            <textarea class="form-control" aria-label="content" id="detailContent" disabled></textarea>
+                            <div class="form-control" aria-label="content" id="detailContent" style="background-color:#e8ebed; width:500px; height:82px; resize: both"></div>
                           </div>
                           <div style="text-align: center; margin-top: 30px">
                             <button type="button" class="btn btn-secondary" id="listButton">목록</button>
