@@ -20,12 +20,22 @@ public class PostService {
     postMapper.insertPost(post);
   }
 
-  public void modify(Post post) {
-    postMapper.updatePost(post);
+  public Boolean modify(Post post) {
+    if (Boolean.TRUE.equals(checkPwd(post.getPostId(), post.getPassword()))) {
+      postMapper.updatePost(post);
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  public void delete(Post post) {
-    postMapper.deletePost(post);
+  public Boolean delete(Post post) {
+    if (Boolean.TRUE.equals(checkPwd(post.getPostId(), post.getPassword()))) {
+      postMapper.deletePost(post);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public List<Post> find(Search search) {
@@ -36,11 +46,7 @@ public class PostService {
     return postMapper.findByPostId(postId);
   }
 
-  public String checkPwd(int postId, String password) {
-    if (!passwordEncoder.matches(password, postMapper.findPwdByPostId(postId))) {
-      return "fail";
-    } else {
-      return "success";
-    }
+  public Boolean checkPwd(int postId, String password) {
+    return passwordEncoder.matches(password, postMapper.findPwdByPostId(postId));
   }
 }

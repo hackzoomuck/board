@@ -24,32 +24,52 @@ const DETAIL = {
                             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" 
                             data-bs-target="#passwordModal" id="deleteButton">삭제</button>
                             <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="updateModalLabel">비밀번호를 입력해주세요.</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="cancel"></button>
-                                </div>
-                                <div class="modal-body">
-                                  <input type="password" class="form-control" aria-label = "password" id="inputPassword">
-                                </div>
-                                <div id="errorPassword" style="color: red"></div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                  <button type="button" class="btn btn-primary" id="passwordButton">확인</button>
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="updateModalLabel">비밀번호를 입력해주세요.</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="cancel"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <input type="password" class="form-control" aria-label = "password" id="inputPassword">
+                                  </div>
+                                  <div id="errorPassword" style="color: red"></div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                    <button type="button" class="btn btn-primary" id="passwordButton">확인</button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="input-group" style="margin-top: 15px">
-                            <textarea class="form-control" placeholder="댓글을 입력하세요." id="content" aria-label="comment" aria-describedby="button-addon2"></textarea>
-                          </div>
-                          <div class="input-group">
-                            <input type="text" aria-label="nickname" class="form-control" placeholder="닉네임" id="nickname">
-                            <input type="password" aria-label="commentPassword" class="form-control" placeholder="비밀번호" id="commentPassword">
-                            <button class="btn btn-outline-secondary" type="button" id="commentButton">등록</button>
-                          </div>
-                          <div class="commentDiv" style="margin-top: 15px"></div>
+                            
+                            <div class="input-group" style="margin-top: 15px">
+                              <textarea class="form-control" placeholder="댓글을 입력하세요." id="content" aria-label="comment" aria-describedby="button-addon2"></textarea>
+                            </div>
+                            <div class="input-group">
+                              <input type="text" aria-label="nickname" class="form-control" placeholder="닉네임" id="nickname">
+                              <input type="password" aria-label="commentPassword" class="form-control" placeholder="비밀번호" id="commentPassword">
+                              <button class="btn btn-outline-secondary" type="button" id="commentButton">등록</button>
+                            </div>
+                            <div class="commentDiv" style="margin-top: 15px"></div>
+                            <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="updateModalLabel">댓글을 수정하세요.</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="cancel"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <textarea class="form-control" aria-label ="commentContentModal" id="commentContentModal" placeholder="댓글을 입력하세요."></textarea>
+                                    <input type="password" class="form-control" aria-label="commentPasswordModal" id="commentPasswordModal" placeholder="비밀번호 입력하세요.">
+                                  </div>
+                                  <div id="errorCommentPassword" style="color: red"></div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                    <button type="button" class="btn btn-primary" id="commentPasswordButton">확인</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>`
       $app.empty();
@@ -67,28 +87,100 @@ const DETAIL = {
     })
   },
   getComments: function (postId) {
+    $("div.commentDiv").empty();
     $.get(`/api/board/comment/${postId}`, {postId: postId})
     .done(function (data) {
       const len = data.length;
       for (let i = 0; i < len; i++) {
+        const commentId = data[i].id;
         const nickname = data[i].nickname;
         const content = data[i].content;
         const div_str = `<div class="row" style="border: 0.5px solid darkgrey;">
-                            <div class="col">${nickname} <br> ${content}</div>
-                            <div class="col" style="margin-top: 10px">
-                                  <button type="button" class="btn btn-secondary btn-sm">수정</button>
-                                  <button type="button" class="btn btn-primary btn-sm">삭제</button>
+                            <div class="col-" style="font-size: smaller; text-align: left; margin-top: 3px">닉네임 : ${nickname}</div>
+                            <div class="col-9" style="text-align: left;">${content}</div>
+                            <div class="col" id="${commentId}">
+                                  <button type="button" class="btn btn-secondary btn-sm" value="commentModifyButton" name="${commentId}" data-bs-toggle="modal" 
+                            data-bs-target="#modifyModal">수정</button>
+                                  <button type="button" class="btn btn-primary btn-sm" value="commentDeleteButton" name="${commentId}" data-bs-toggle="modal" 
+                            data-bs-target="#passwordModal">삭제</button>
                             </div>
                          </div>`;
         $("div.commentDiv").append(div_str);
       }
+      DETAIL.commentDetail(postId);
     });
+  },
+  commentDetail: function (postId) { /////////////////////////////////////////
+    $("div.col > button[value|='commentDeleteButton']").on("click",
+        function () {
+          const commentID = $(this).attr('name');
+          $("#errorPassword").text("");
+          const $inputPassword = $("#inputPassword");
+          $inputPassword.val('');
+          $inputPassword.on("input", function () {
+            $("#errorPassword").text("");
+          })
+          $("#passwordButton").off().on("click", function () {
+            $.ajax({
+              url: "/api/board/comment",
+              type: "DELETE",
+              data: {id: commentID, password: $inputPassword.val()}
+            })
+            .done(function (data) {
+              if (data) {
+                alert("삭제되었습니다.")
+                $(".modal").hide();
+                $(".modal-backdrop").remove();
+                DETAIL.getComments(postId);
+              } else {
+                $("#errorPassword").text("비밀번호가 일치하지 않습니다.");
+              }
+            })
+          })
+        });
+    $("div.col > button[value|='commentModifyButton']").on("click",
+        function () {
+          const commentID = $(this).attr('name');
+
+          $("#errorCommentPassword").text("");
+          const $commentPasswordModal = $("#commentPasswordModal");
+          $commentPasswordModal.val('');
+          $commentPasswordModal.on("input", function () {
+            $("#errorCommentPassword").text("");
+          })
+          $.get(`/api/board/comment`, {id: commentID})
+          .done(function (data) {
+            $("#commentContentModal").val(data.content);
+          })
+          $("#commentPasswordButton").off().on("click", function () {
+            $.ajax({
+              url: "/api/board/comment",
+              type: "PUT",
+              data: {
+                id: commentID,
+                content: $("#commentContentModal").val(),
+                password: $("#commentPasswordModal").val()
+              }
+            })
+            .done(function (data) {
+              if (data) {
+                alert("수정되었습니다.")
+                $(".modal").hide();
+                $(".modal-backdrop").remove();
+                DETAIL.getComments(postId);
+              } else {
+                $("#errorCommentPassword").text("비밀번호가 일치하지 않습니다.");
+              }
+            })
+          })
+        });
   },
   event: function (postId) {
     $("#listButton").on("click", function () {
       LIST.init();
     });
-    $("#modifyButton").on("click", function (event) {
+    $("#modifyButton").on("click", function () {
+      $("#errorPassword").text("");
       const $inputPassword = $("#inputPassword");
       $inputPassword.val('');
       $inputPassword.on("input", function () {
@@ -99,7 +191,7 @@ const DETAIL = {
             {postId: postId, password: $("#inputPassword").val()})
         .done(
             function (data) {
-              if (data === "success") {
+              if (data) {
                 MODIFY.init(postId);
               } else {
                 $("#errorPassword").text("비밀번호가 일치하지 않습니다.");
@@ -108,30 +200,26 @@ const DETAIL = {
       })
     });
     $("#deleteButton").on("click", function () {
+      $("#errorPassword").text("");
       const $inputPassword = $("#inputPassword");
       $inputPassword.val('');
       $inputPassword.on("input", function () {
         $("#errorPassword").text("");
       })
       $("#passwordButton").on("click", function () {
-        $.get(`/api/board/checkPwd`,
-            {postId: postId, password: $inputPassword.val()})
-        .done(
-            function (data) {
-              if (data === "success") {
-                $.ajax({
-                  url: "/api/board",
-                  type: "DELETE",
-                  data: {postId: postId}
-                })
-                .done(function () {
-                  alert("삭제되었습니다.")
-                  LIST.init();
-                })
-              } else {
-                $("#errorPassword").text("비밀번호가 일치하지 않습니다.");
-              }
-            })
+        $.ajax({
+          url: "/api/board",
+          type: "DELETE",
+          data: {postId: postId, password: $inputPassword.val()}
+        })
+        .done(function (data) {
+          if (data) {
+            alert("삭제되었습니다.")
+            LIST.init();
+          } else {
+            $("#errorPassword").text("비밀번호가 일치하지 않습니다.");
+          }
+        })
       })
     });
     $("#commentButton").on("click", function () {
@@ -149,7 +237,7 @@ const DETAIL = {
         $("div.commentDiv").empty();
         DETAIL.getComments(postId);
       })
-    })
+    });
   }
 }
 export default DETAIL;

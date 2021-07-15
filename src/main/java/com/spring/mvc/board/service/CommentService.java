@@ -19,16 +19,33 @@ public class CommentService {
     commentMapper.insertComment(comment);
   }
 
-  public List<Comment> find(int postId) {
-    return commentMapper.findComment(postId);
+  public Comment find(int id) {
+    return commentMapper.findComment(id);
   }
-//
-//  public void modify(Post post) {
-//    commentMapper.updatePost(post);
-//  }
-//
-//  public void delete(Post post) {
-//    commentMapper.deletePost(post);
-//  }
 
+  public List<Comment> findAll(int postId) {
+    return commentMapper.findAllComment(postId);
+  }
+
+  public Boolean modify(Comment comment) {
+    if (Boolean.TRUE.equals(checkPwd(comment.getId(), comment.getPassword()))) {
+      commentMapper.updateComment(comment);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public Boolean delete(int id, String password) {
+    if (Boolean.TRUE.equals(checkPwd(id, password))) {
+      commentMapper.deleteComment(id);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public Boolean checkPwd(int id, String password) {
+    return passwordEncoder.matches(password, commentMapper.findPwdById(id));
+  }
 }

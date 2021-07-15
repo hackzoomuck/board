@@ -20,8 +20,27 @@ const MODIFY = {
                             </div>
                             <div id="errorContent" style="color: red"></div>
                             <div style="text-align: center; margin-top: 30px">
-                            <button type="button" class="btn btn-secondary" id="modifyButton">수정</button>
-                            <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
+                              <button type="button" class="btn btn-secondary" id="modifyButton" data-bs-toggle="modal" 
+                            data-bs-target="#passwordModal" >수정</button>
+                              <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
+                            </div>
+                            <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="updateModalLabel">비밀번호를 입력해주세요.</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="cancel"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <input type="password" class="form-control" aria-label = "password" id="inputPassword">
+                                  </div>
+                                  <div id="errorPassword" style="color: red"></div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                    <button type="button" class="btn btn-primary" id="passwordButton">확인</button>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                         </div>`
       $app.empty();
@@ -49,19 +68,32 @@ const MODIFY = {
     let inputContentVal = $("#inputContent").val();
     inputContentVal = inputContentVal.replaceAll('<', '&#60;'); //replace 호출 함수
     inputContentVal = inputContentVal.replaceAll('>', '&#62;');
-    $.ajax({
-      url: "/api/board",
-      method: "PUT",
-      data: {
-        postId: postId,
-        title: $("#inputTitle").val(),
-        content: inputContentVal
-      }
+    $("#errorPassword").text("");
+    const $inputPassword = $("#inputPassword");
+    $inputPassword.val('');
+    $inputPassword.on("input", function () {
+      $("#errorPassword").text("");
     })
-    .done(function () {
-      alert("수정되었습니다.");
-      DETAIL.init(postId);
-    });
+    $("#passwordButton").on("click", function () {
+      $.ajax({
+        url: "/api/board",
+        type: "PUT",
+        data: {
+          postId: postId,
+          title: $("#inputTitle").val(),
+          content: inputContentVal,
+          password: $inputPassword.val()
+        }
+      })
+      .done(function (data) {
+        if (data) {
+          alert("수정되었습니다.");
+          DETAIL.init(postId);
+        } else {
+          $("#errorPassword").text("비밀번호가 일치하지 않습니다.");
+        }
+      })
+    })
   },
 
   event: function (postId) {

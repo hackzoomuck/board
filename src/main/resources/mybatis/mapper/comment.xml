@@ -11,8 +11,34 @@
   </select>
 
   <select id="findComment" parameterType="int" resultType="Comment">
-    SELECT content, nickname, parent_id
+    SELECT id, content, nickname, parent_id
+    FROM comment
+    WHERE id = #{id}
+      AND delete_whether = false;
+  </select>
+
+  <select id="findAllComment" parameterType="int" resultType="Comment">
+    SELECT id, content, nickname, parent_id
     FROM comment
     WHERE post_id = #{postId}
+      AND delete_whether = false;
   </select>
+
+  <select id="findPwdById" parameterType="int" resultType="String">
+    SELECT password
+    FROM comment
+    WHERE id = #{id}
+  </select>
+
+  <update id="updateComment" parameterType="Comment">
+    UPDATE comment
+    SET content = #{comment.content}
+    WHERE id = #{comment.id}
+  </update>
+
+  <update id="deleteComment" parameterType="int">
+    UPDATE comment
+    SET delete_whether = TRUE
+    WHERE id = #{id}
+  </update>
 </mapper>

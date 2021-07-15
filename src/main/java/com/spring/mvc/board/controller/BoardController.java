@@ -26,7 +26,7 @@ public class BoardController {
   }
 
   @GetMapping("/checkPwd")
-  public String checkPwd(int postId, String password) {
+  public Boolean checkPwd(int postId, String password) {
     return postService.checkPwd(postId, password);
   }
 
@@ -36,14 +36,13 @@ public class BoardController {
   }
 
   @PutMapping
-  public void modify(Post post) {
-    postService.modify(post);
+  public Boolean modify(Post post) {
+    return postService.modify(post);
   }
 
   @DeleteMapping
-  public void delete(Post post) {
-    postService.delete(post);
+  public Boolean delete(Post post) {
+    return postService.delete(post);
   }
-
 
 }

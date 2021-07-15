@@ -13,13 +13,28 @@ public class CommentController {
 
   private final CommentService commentService;
 
-  @PostMapping()
-  public void commentRegister(Comment comment) {
-    commentService.register(comment);
+  @GetMapping()
+  public Comment searchOne(int id) {
+    return commentService.find(id);
   }
 
   @GetMapping("/{postId}")
-  public List<Comment> commentSearch(@PathVariable int postId) {
-    return commentService.find(postId);
+  public List<Comment> searchAll(@PathVariable int postId) {
+    return commentService.findAll(postId);
+  }
+
+  @PostMapping()
+  public void register(Comment comment) {
+    commentService.register(comment);
+  }
+
+  @DeleteMapping
+  public Boolean delete(int id, String password) {
+    return commentService.delete(id, password);
+  }
+
+  @PutMapping
+  public Boolean modify(Comment comment) {
+    return commentService.modify(comment);
   }
 }

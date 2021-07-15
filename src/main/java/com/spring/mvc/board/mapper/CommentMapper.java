@@ -10,6 +10,13 @@ public interface CommentMapper {
 
   void insertComment(@Param("comment") Comment comment);
 
-  List<Comment> findComment(@Param("postId") int postId);
+  Comment findComment(@Param("id") int id);
 
+  List<Comment> findAllComment(@Param("postId") int postId);
+
+  String findPwdById(@Param("id") int id);
+
+  void updateComment(@Param("comment") Comment comment);
+
+  void deleteComment(@Param("id") int id);
 }
