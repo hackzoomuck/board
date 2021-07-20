@@ -8,34 +8,36 @@ const REGISTER = {
     $(document).ready(function () {
       const template = `<div class="container">
                           <h2 style="text-align: center; margin-top: 30px">게시물 등록</h2>
+                          <form id="registerForm">
                             <div class="input-group mb-3" style="margin-top: 30px">
                               <span class="input-group-text">제목</span>
-                              <input type="text" class="inputTitle form-control" aria-label="title" placeholder="제목을 입력하세요."  id="inputTitle">
+                              <input type="text" class="inputTitle form-control" aria-label="title" placeholder="제목을 입력하세요."  id="inputTitle" name="inputTitle">
                             </div>
                             <div id="errorTitle" style="color: red"></div>
                             <div class="input-group mb-3">
                               <span class="input-group-text">내용</span>
-                              <textarea class="inputContent form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent"></textarea>
+                              <textarea class="inputContent form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent" name="inputContent"></textarea>
                             </div>
                             <div id="errorContent" style="color: red"></div>
                             <div class="input-group mb-3">
                               <span class="input-group-text">비밀번호</span>
-                              <input type="password" class="form-control" aria-label="password" placeholder="최소 8글자 이상 입력하세요." id="inputPassword"">
+                              <input type="password" class="form-control" aria-label="password" placeholder="최소 8글자 이상 입력하세요." id="inputPassword" name="inputPassword">
                             </div>
                             <div id="errorPassword" style="color: red"></div>
                             <div class="input-group mb-3">
                               <span class="input-group-text">비밀번호 확인</span>
-                              <input type="password" class="form-control" aria-label="passwordCheck" placeholder="비밀번호 재입력하세요." id="inputPasswordCheck" ">
+                              <input type="password" class="form-control" aria-label="passwordCheck" placeholder="비밀번호 재입력하세요." id="inputPasswordCheck" name="inputPasswordCheck">
                             </div>
                             <div id="errorPasswordCheck" style="color: red"></div>
                             <button type="button" class="btn btn-secondary" id="registerButton">등록</button>
                             <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
                             </div>
+                          </form>
                         </div>`
       $app.empty();
       $app.append(template);
-
       self.validate();
+      self.jqueryValidate();
       self.event();
     })
   },
@@ -90,7 +92,39 @@ const REGISTER = {
       }
     });
   },
-
+  jqueryValidate: function () {
+    $("#registerForm").validate({
+      errorClass: "validError",
+      messages: {
+        inputTitle: {
+          required: "제목을 입력하세요.",
+          minlength: "한글자 이상 입력해주세요.",
+          maxlength: "20자 초과할 수 없습니다."
+        }
+      },
+      rules: {
+        inputTitle: {
+          required: true,
+          minlength: 1,
+          maxlength: 20
+        },
+        inputContent: {
+          required: true,
+          minlength: 1,
+          maxlength: 100
+        },
+        inputPassword: {
+          required: true,
+          minlength: 8
+        },
+        inputPasswordCheck: {
+          required: true,
+          minlength: 8,
+          equalTo: "#inputPassword"
+        }
+      }
+    })
+  },
   validate: function () {
     const $inputTitle = $("#inputTitle");
     const $errorTitle = $("#errorTitle");

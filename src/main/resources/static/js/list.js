@@ -6,7 +6,6 @@ const LIST = {
   init: function () {
     const self = this;
     const $app = $("#app");
-    $(".modal-backdrop").remove();
     const template = `<h2 style="text-align: center; margin-top: 30px">게시판</h2>
                         <div class="input-group mb-3"
                              style="width: 600px; margin-left: auto; margin-right: auto;margin-top: 30px">
@@ -26,8 +25,11 @@ const LIST = {
                           <div class="col">
                             번호
                           </div>
-                          <div class="col-8">
+                          <div class="col-6">
                             제목
+                          </div>
+                          <div class="col">
+                            업데이트 날짜
                           </div>
                         </div>
                       </div>
@@ -68,9 +70,11 @@ const LIST = {
           for (let i = idx - 1; i >= 0 && i >= idx - listSize; i--) {
             const postId = data[i].postId;
             const title = data[i].title;
+            const updateDate = data[i].updateDate.substring(0, 10);
             const div_str = `<div class="row">
                               <div class="col">${postId}</div>
-                              <div class="col-8">${title}</div>
+                              <div class="col-6">${title}</div>
+                              <div class="col">${updateDate}</div>
                              </div>`;
             $("div.container").append(div_str);
           }

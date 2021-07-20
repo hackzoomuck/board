@@ -1,5 +1,6 @@
 package com.spring.mvc.board.dto;
 
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,6 @@ public class Post {
   private int postId;
   private boolean deleteWhether;
   private String password;
+  private Timestamp updateDate;
 }
 
