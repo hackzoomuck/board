@@ -13,9 +13,31 @@
           integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
           crossorigin="anonymous">
   </script>
+  <script
+      src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
 </head>
 <body>
 <div id="app"></div>
+<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">비밀번호를 입력해주세요.</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="cancel"></button>
+      </div>
+      <div class="modal-body">
+        <input type="password" class="form-control" aria-label="password" id="inputPassword">
+      </div>
+      <div id="errorPassword" style="color: red"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" id="passwordButton">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="/js/list.js" type="module"></script>
 </body>
 </html>

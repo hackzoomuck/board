@@ -7,6 +7,10 @@ div.container > div.row > div:first-child {
   text-align: center;
 }
 
+div.container > div.row > div:nth-child(3) {
+  text-align: center;
+}
+
 div.container > div.row > p {
   text-align: center;
 }
@@ -22,4 +26,8 @@ div.container > div.row:nth-child(n+2):hover {
 
 #pageUl {
   cursor: pointer;
+}
+
+.validError {
+  color: red;
 }

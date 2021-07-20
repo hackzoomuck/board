@@ -8,20 +8,22 @@ const MODIFY = {
     $(document).ready(function () {
       const template = `<div class="container">
                           <h2 style="text-align: center; margin-top: 30px">게시물 수정</h2>
-                            <div class="input-group mb-3" style="margin-top: 30px">
-                              <span class="input-group-text">제목</span>
-                              <input type="text" class="form-control" aria-label="title" placeholder="제목을 입력하세요." aria-describedby="basic-addon1" id="inputTitle">
-                            </div>
-                            <div id="errorTitle" style="color: red"></div>
-                            <div class="input-group mb-3">
-                              <span class="input-group-text">내용</span>
-                              <textarea class="form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent"></textarea>
-                            </div>
-                            <div id="errorContent" style="color: red"></div>
-                            <div style="text-align: center; margin-top: 30px">
-                            <button type="button" class="btn btn-secondary" id="modifyButton">수정</button>
+                          <div id="detailUpdateDate" style="text-align: right">업데이트 : </div>
+                          <div class="input-group mb-3" style="margin-top: 5px">
+                            <span class="input-group-text">제목</span>
+                            <input type="text" class="form-control" aria-label="title" placeholder="제목을 입력하세요." aria-describedby="basic-addon1" id="inputTitle">
+                          </div>
+                          <div id="errorTitle" style="color: red"></div>
+                          <div class="input-group mb-3">
+                            <span class="input-group-text">내용</span>
+                            <textarea class="form-control" aria-label="content" placeholder="내용을 입력하세요." id="inputContent"></textarea>
+                          </div>
+                          <div id="errorContent" style="color: red"></div>
+                          <div style="text-align: center; margin-top: 30px">
+                            <button type="button" class="btn btn-secondary" id="modifyButton" data-bs-toggle="modal" 
+                          data-bs-target="#passwordModal" >수정</button>
                             <button type="button" class="btn btn-secondary" id="cancelButton">취소</button>
-                            </div>
+                          </div>
                         </div>`
       $app.empty();
       $app.append(template);
@@ -39,6 +41,8 @@ const MODIFY = {
       .replaceAll('&#62;', '>');
       $("#inputTitle").val(data.title);
       $("#inputContent").val(inputContent);
+      $("#detailUpdateDate").empty().append(
+          "업데이트 날짜 :" + data.updateDate.substring(0, 10));
       self.variable.preInputTitle = data.title;
       self.variable.preInputContent = inputContent;
     })
@@ -48,19 +52,32 @@ const MODIFY = {
     let inputContentVal = $("#inputContent").val();
     inputContentVal = inputContentVal.replaceAll('<', '&#60;'); //replace 호출 함수
     inputContentVal = inputContentVal.replaceAll('>', '&#62;');
-    $.ajax({
-      url: "/api/board",
-      method: "PUT",
-      data: {
-        postId: postId,
-        title: $("#inputTitle").val(),
-        content: inputContentVal
-      }
+    $("#errorPassword").text("");
+    const $inputPassword = $("#inputPassword");
+    $inputPassword.val('');
+    $inputPassword.on("input", function () {
+      $("#errorPassword").text("");
     })
-    .done(function () {
-      alert("수정되었습니다.");
-      DETAIL.init(postId);
-    });
+    $("#passwordButton").on("click", function () {
+      $.ajax({
+        url: "/api/board",
+        type: "PUT",
+        data: {
+          postId: postId,
+          title: $("#inputTitle").val(),
+          content: inputContentVal,
+          password: $inputPassword.val()
+        }
+      })
+      .done(function (data) {
+        if (data) {
+          alert("수정되었습니다.");
+          DETAIL.init(postId);
+        } else {
+          $("#errorPassword").text("비밀번호가 일치하지 않습니다.");
+        }
+      })
+    })
   },
 
   event: function (postId) {
